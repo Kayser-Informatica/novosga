@@ -9,6 +9,9 @@ framework:
     #esi: true
     #fragments: true
 
+    assets:
+        version: 'v%version%'
+
 when@test:
     framework:
         test: true
