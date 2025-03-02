@@ -88,6 +88,9 @@ jobs:
         uses: docker/metadata-action@v4.3.0
         with:
           images: ${{ env.REGISTRY }}/${{ env.IMAGE_NAME }}
+          tags: |
+            type=semver,pattern={{version}}
+            type=raw,value=2.2-dev,enable=${{ github.ref == format('refs/heads/{0}', 'v2.2') }}
 
       - name: Build and push Docker image
         if: ${{ github.ref_type == 'tag' }}
