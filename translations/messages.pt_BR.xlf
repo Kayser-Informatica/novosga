@@ -364,7 +364,7 @@
             </trans-unit>
             <trans-unit id="admin.title">
                 <source>admin.title</source>
-                <target>Administraçao</target>
+                <target>Administração</target>
             </trans-unit>
             <trans-unit id="admin.menu.system">
                 <source>admin.menu.system</source>

@@ -204,7 +204,7 @@
             </trans-unit>
             <trans-unit id="home.welcome.title">
                 <source>home.welcome.title</source>
-                <target>Bienvenido, 1%name%</target>
+                <target>Bienvenido, %name%</target>
             </trans-unit>
             <trans-unit id="home.welcome.subtitle">
                 <source>home.welcome.subtitle</source>
