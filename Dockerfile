@@ -38,4 +38,5 @@ RUN set -xe \
 FROM php
 
 COPY --from=composer --chown=65534:65534 /var/www/html/vendor /var/www/html/vendor
+COPY --from=composer --chown=65534:65534 /var/www/html/.env.local.php /var/www/html/.env.local.php
 COPY --from=composer --chown=65534:65534 /var/www/html/public/bundles /var/www/html/public/bundles
