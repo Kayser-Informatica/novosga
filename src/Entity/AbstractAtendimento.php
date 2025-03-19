@@ -449,8 +449,12 @@ abstract class AbstractAtendimento implements AtendimentoInterface
         ];
     }
 
-    private function dateIntervalToSeconds(DateInterval $d): int
+    private function dateIntervalToSeconds(?DateInterval $d): int
     {
+        if (!$d) {
+            return 0;
+        }
+
         return $d->s + ($d->i * 60) + ($d->h * 3600) + ($d->d * 86400) + ($d->m * 2592000);
     }
 
