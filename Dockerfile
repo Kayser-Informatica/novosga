@@ -23,6 +23,7 @@ ADD --chown=65534:65534 . /var/www/html
 
 FROM php AS composer
 
+ARG GIT_COMMIT
 ENV COMPOSER_CACHE_DIR=/tmp/
 ENV APP_ENV=prod
 ENV APP_DEBUG=0
@@ -30,6 +31,7 @@ ENV APP_DEBUG=0
 RUN curl -o composer.phar https://getcomposer.org/download/2.7.2/composer.phar
 
 RUN set -xe \
+    && echo "APP_BUILD_NUMBER=$GIT_COMMIT" >> .env.local \
     && php composer.phar install --no-dev --optimize-autoloader \
     && php composer.phar dump-autoload --no-dev --classmap-authoritative \
     && php composer.phar dump-env prod

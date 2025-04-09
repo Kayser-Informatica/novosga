@@ -8,6 +8,7 @@ parameters:
     version: '2.2-dev'
     title: 'Novo SGA CE'
     mercure_url: '%env(MERCURE_PUBLIC_URL)%'
+    app.build_number: '%env(default::APP_BUILD_NUMBER)%'
     # https://symfony.com/doc/current/performance.html
     .container.dumper.inline_factories: true
 

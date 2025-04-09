@@ -10,7 +10,7 @@ framework:
     #fragments: true
 
     assets:
-        version: 'v%version%'
+        version: 'v%version%-%app.build_number%'
 
 when@test:
     framework:
