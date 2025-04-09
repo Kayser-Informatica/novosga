@@ -8,6 +8,8 @@ parameters:
     version: '2.2-dev'
     title: 'Novo SGA CE'
     mercure_url: '%env(MERCURE_PUBLIC_URL)%'
+    # https://symfony.com/doc/current/performance.html
+    .container.dumper.inline_factories: true
 
 services:
     # default configuration for services in *this* file
