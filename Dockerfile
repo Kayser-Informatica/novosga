@@ -1,4 +1,4 @@
-FROM trafex/php-nginx:3.4.0 as php
+FROM trafex/php-nginx:3.4.0 AS php
 
 USER root
 
@@ -21,11 +21,11 @@ USER 65534
 ADD --chown=65534:65534 . /var/www/html
 
 
-FROM php as composer
+FROM php AS composer
 
-ENV COMPOSER_CACHE_DIR /tmp/
-ENV APP_ENV prod
-ENV APP_DEBUG 0
+ENV COMPOSER_CACHE_DIR=/tmp/
+ENV APP_ENV=prod
+ENV APP_DEBUG=0
 
 RUN curl -o composer.phar https://getcomposer.org/download/2.7.2/composer.phar
 
