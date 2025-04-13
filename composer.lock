@@ -2308,16 +2308,16 @@
         },
         {
             "name": "novosga/settings-bundle",
-            "version": "v2.2.0",
+            "version": "v2.2.1",
             "source": {
                 "type": "git",
                 "url": "https://github.com/novosga/settings-bundle.git",
-                "reference": "f93eb45c8df9ecde81a242d8fda121dbb8a2698b"
+                "reference": "fd560d9a301ce071656229eb1e18c266651dd07d"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/novosga/settings-bundle/zipball/f93eb45c8df9ecde81a242d8fda121dbb8a2698b",
-                "reference": "f93eb45c8df9ecde81a242d8fda121dbb8a2698b",
+                "url": "https://api.github.com/repos/novosga/settings-bundle/zipball/fd560d9a301ce071656229eb1e18c266651dd07d",
+                "reference": "fd560d9a301ce071656229eb1e18c266651dd07d",
                 "shasum": ""
             },
             "require": {
@@ -2349,9 +2349,9 @@
             ],
             "support": {
                 "issues": "https://github.com/novosga/settings-bundle/issues",
-                "source": "https://github.com/novosga/settings-bundle/tree/v2.2.0"
+                "source": "https://github.com/novosga/settings-bundle/tree/v2.2.1"
             },
-            "time": "2025-04-09T13:55:49+00:00"
+            "time": "2025-04-13T19:59:31+00:00"
         },
         {
             "name": "novosga/triage-bundle",
