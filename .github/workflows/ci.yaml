@@ -1,9 +1,11 @@
 name: CI
 
-on: [push]
+on:
+  push:
+    branches:
+      - v2.2
 
 env:
-  IMAGE_NAME: ${{ github.repository }}
   DATABASE_URL: "mysql://root:dbpass@127.0.0.1:3306/novosga?serverVersion=5.7.40&charset=utf8"
   # DATABASE_URL: "postgresql://postgres:dbpass@127.0.0.1:5432/novosga?serverVersion=15&charset=utf8"
   APP_ENV: "test"
@@ -72,32 +74,3 @@ jobs:
 
       - name: PHP Unit Tests
         run: vendor/bin/phpunit
-
-      - name: Log in to the Container registry
-        if: ${{ github.ref_type == 'tag' }}
-        uses: docker/login-action@v2.1.0
-        with:
-          username: ${{ secrets.DOCKER_HUB_USER }}
-          password: ${{ secrets.DOCKER_HUB_TOKEN }}
-
-      - name: Extract metadata (tags, labels) for Docker
-        if: ${{ github.ref_type == 'tag' }}
-        id: meta
-        uses: docker/metadata-action@v4.3.0
-        with:
-          images: ${{ env.IMAGE_NAME }}
-          tags: |
-            type=semver,pattern={{version}}
-            type=semver,pattern={{major}}.{{minor}}
-            type=raw,value=2.2-dev,enable=${{ github.ref == format('refs/heads/{0}', 'v2.2') }}
-
-      - name: Build and push Docker image
-        if: ${{ github.ref_type == 'tag' }}
-        uses: docker/build-push-action@v4.0.0
-        with:
-          context: .
-          push: true
-          tags: ${{ steps.meta.outputs.tags }}
-          labels: ${{ steps.meta.outputs.labels }}
-          build-args: |
-            GIT_COMMIT=${{ github.sha }}
