@@ -17,6 +17,6 @@ jobs:
     steps:
       - uses: googleapis/release-please-action@v3
         with:
-          release-type: php
+          release-type: simple
           extra-files: |
             config/services.yaml
