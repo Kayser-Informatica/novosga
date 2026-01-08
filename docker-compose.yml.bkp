@@ -1,0 +1,74 @@
+services:
+  novosga:
+    image: novosga/novosga:2.2-standalone
+    restart: always
+    depends_on:
+      - mysqldb
+    ports:
+      - "0.0.0.0:80:8080"
+    environment:
+      APP_ENV: ${APP_ENV}
+      # database connection
+      DATABASE_URL: ${DATABASE_URL}
+      # default admin user
+      NOVOSGA_ADMIN_USERNAME: ${NOVOSGA_ADMIN_USERNAME}
+      NOVOSGA_ADMIN_PASSWORD: ${NOVOSGA_ADMIN_PASSWORD}
+      NOVOSGA_ADMIN_FIRSTNAME: 'Administrador'
+      NOVOSGA_ADMIN_LASTNAME: 'Global'
+      # default unity
+      NOVOSGA_UNITY_NAME: 'Minha unidade'
+      NOVOSGA_UNITY_CODE: 'U01'
+      # default no-priority
+      NOVOSGA_NOPRIORITY_NAME: 'Normal'
+      NOVOSGA_NOPRIORITY_DESCRIPTION: 'Atendimento normal'
+      # default priority
+      NOVOSGA_PRIORITY_NAME: 'Prioridade'
+      NOVOSGA_PRIORITY_DESCRIPTION: 'Atendimento prioritário'
+      # default place
+      NOVOSGA_PLACE_NAME: 'Guichê'
+      # Set TimeZone and locale
+      TZ: 'America/Sao_Paulo'
+      APP_LANGUAGE: 'pt_BR'
+      # Endereço Mercure para publicar mensagem (onde "mercure" é o nome do host)
+      # esse endereço será chamado internamente via o PHP
+      MERCURE_URL: http://mercure:3000/.well-known/mercure
+      # Endereço Mercure para consumir mensagem
+      # esse endereço será chamado via o navegador web
+      MERCURE_PUBLIC_URL: http://127.0.0.1:3000/.well-known/mercure
+      # the default secret key, must be the same as MERCURE_PUBLISHER_JWT_KEY
+      MERCURE_JWT_SECRET: ${MERCURE_JWT_SECRET}
+  mercure:
+    image: novosga/mercure:v0.11
+    restart: always
+    ports:
+      - "0.0.0.0:3000:3000"
+    environment:
+      # same value from ports
+      SERVER_NAME: ":3000"
+      # default publish key, must be changed
+      MERCURE_PUBLISHER_JWT_KEY: ${MERCURE_PUBLISHER_JWT_KEY}
+      MERCURE_EXTRA_DIRECTIVES:  "anonymous 1; cors_origins *"
+  mysqldb:
+    image: mysql:8.0
+    restart: always
+    environment:
+      MYSQL_USER: ${MYSQL_USER}
+      MYSQL_DATABASE: ${MYSQL_DATABASE}
+      MYSQL_ROOT_PASSWORD: ${MYSQL_ROOT_PASSWORD}
+      MYSQL_PASSWORD: ${MYSQL_PASSWORD}
+      # Set TimeZone
+      TZ: 'America/Sao_Paulo'
+  panel-app:
+    build:
+      context: ./panel-app
+      dockerfile: Dockerfile
+    restart: always
+    ports:
+      - "0.0.0.0:8001:80"
+  triage-app:
+    build:
+      context: ./triage-app
+      dockerfile: Dockerfile
+    restart: always
+    ports:
+      - "0.0.0.0:8002:80"
