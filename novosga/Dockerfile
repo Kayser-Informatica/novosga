@@ -32,10 +32,10 @@ RUN curl -o composer.phar https://getcomposer.org/download/2.7.2/composer.phar
 
 RUN set -xe \
     && touch .env \
-    && echo "APP_BUILD_NUMBER=$GIT_COMMIT" >> .env.local \
-    && php composer.phar install --no-dev --optimize-autoloader --no-scripts \
-    && php composer.phar dump-autoload --no-dev --classmap-authoritative \
-    && php composer.phar dump-env prod
+    && echo "APP_BUILD_NUMBER=$GIT_COMMIT" >> .env.local
+RUN php composer.phar install --no-dev --optimize-autoloader
+RUN php composer.phar dump-autoload --no-dev --classmap-authoritative
+RUN php composer.phar dump-env prod
 
 
 FROM alpine/openssl AS cert
