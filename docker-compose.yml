@@ -39,10 +39,10 @@ services:
       APP_LANGUAGE: ${APP_LANGUAGE:-pt_BR}
       # Endereço Mercure para publicar mensagem (onde "mercure" é o nome do host)
       # esse endereço será chamado internamente via o PHP
-      MERCURE_URL: http://mercure:3000/.well-known/mercure
+      MERCURE_URL: http://mercure:${MERCURE_PORT:-3000}/.well-known/mercure
       # Endereço Mercure para consumir mensagem
       # esse endereço será chamado via o navegador web
-      MERCURE_PUBLIC_URL: ${MERCURE_PUBLIC_URL:-http://127.0.0.1:3000/.well-known/mercure}
+      MERCURE_PUBLIC_URL: ${MERCURE_PUBLIC_URL:-http://127.0.0.1:${MERCURE_PORT:-3000}/.well-known/mercure}
       # the default secret key, must be the same as MERCURE_PUBLISHER_JWT_KEY
       MERCURE_JWT_SECRET: ${MERCURE_JWT_SECRET}
       # Messenger transport DSN (uses Doctrine to store messages in database)
