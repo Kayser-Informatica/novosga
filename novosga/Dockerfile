@@ -28,9 +28,12 @@ ENV COMPOSER_CACHE_DIR=/tmp/
 ENV APP_ENV=prod
 ENV APP_DEBUG=0
 
+COPY .env .env
+
 RUN curl -o composer.phar https://getcomposer.org/download/2.7.2/composer.phar
 
 RUN set -xe \
+    && touch .env \
     && echo "APP_BUILD_NUMBER=$GIT_COMMIT" >> .env.local \
     && php composer.phar install --no-dev --optimize-autoloader \
     && php composer.phar dump-autoload --no-dev --classmap-authoritative \
