@@ -52,15 +52,15 @@ FROM php
 # Set the default parameters
 ENV APP_ENV=prod \
     APP_DEBUG=0 \
-    APP_SECRET \
-    DATABASE_URL \
-    MERCURE_URL \
-    MERCURE_PUBLIC_URL \
-    MERCURE_JWT_SECRET \
-    OAUTH_PRIVATE_KEY \
-    OAUTH_PUBLIC_KEY \
-    OAUTH_PASSPHRASE \
-    OAUTH_ENCRYPTION_KEY \
+    APP_SECRET="localhost" \
+    DATABASE_URL="localhost" \
+    MERCURE_URL="localhost" \
+    MERCURE_PUBLIC_URL="localhost" \
+    MERCURE_JWT_SECRET="localhost" \
+    OAUTH_PRIVATE_KEY="localhost" \
+    OAUTH_PUBLIC_KEY="localhost" \
+    OAUTH_PASSPHRASE="localhost" \
+    OAUTH_ENCRYPTION_KEY="localhost" \
     LANGUAGE=pt_BR \
     NOVOSGA_ADMIN_USERNAME="admin" \
     NOVOSGA_ADMIN_PASSWORD="123456" \
