@@ -1,0 +1,36 @@
+{% set unidade = app.user.lotacao ? app.user.lotacao.unidade : null %}
+
+<ul class="navbar-nav me-auto mb-2 mb-lg-0">
+    {% if unidade %}
+        <li class="nav-item dropdown">
+            <a href="#" class="nav-link dropdown-toggle" data-bs-toggle="dropdown">{{ unidade.nome }} <b class="caret"></b></a>
+            <ul class="dropdown-menu">
+                {% for module in modules %}
+                    {% if is_granted('view', module) %}
+                        <li>
+                            <a href="{{ path(module.homeRoute) }}" class="dropdown-item">
+                                <i class="fa fa-{{ module.iconName }} fa-fw"></i>
+                                {{ module.displayName }}
+                            </a>
+                        </li>
+                    {% endif %}
+                {% endfor %}
+                {% if modules|length %}
+                    <li><hr class="dropdown-divider"></li>
+                {% endif %}
+                <li>
+                    <a href="#dialog-unidade" data-bs-toggle="modal" class="dropdown-item">
+                        <i class="fa fa-exchange"></i> &nbsp;
+                        {{ 'menu.change_unity'|trans }}
+                    </a>
+                </li>
+            </ul>
+        </li>
+    {% else %}
+        <li>
+            <a href="#dialog-unidade" data-bs-toggle="modal">
+                {{ 'menu.choose_unity'|trans }}
+            </a>
+        </li>
+    {% endif %}
+</ul>

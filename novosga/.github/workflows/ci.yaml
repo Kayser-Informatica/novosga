@@ -1,0 +1,85 @@
+name: CI
+
+on:
+  push:
+    branches: '**'
+
+env:
+  APP_ENV: "test"
+
+jobs:
+  tests:
+    runs-on: ubuntu-latest
+    services:
+      mysql:
+        image: mysql:5.7
+        env:
+          MYSQL_DATABASE: novosga_test
+          MYSQL_ROOT_PASSWORD: dbpass
+        options: >-
+          --health-cmd="mysqladmin ping"
+          --health-interval 10s
+          --health-timeout 5s
+          --health-retries 5
+        ports:
+          - 3306:3306
+      postgres:
+        image: postgres:15
+        env:
+          POSTGRES_USER: postgres
+          POSTGRES_PASSWORD: dbpass
+          POSTGRES_DB: novosga_test
+        options: >-
+          --health-cmd pg_isready
+          --health-interval 10s
+          --health-timeout 5s
+          --health-retries 5
+        ports:
+          - 5432:5432
+
+    strategy:
+      matrix:
+        dsn:
+          - "mysql://root:dbpass@127.0.0.1:3306/novosga?serverVersion=5.7.40&charset=utf8"
+          - "postgresql://postgres:dbpass@127.0.0.1:5432/novosga?serverVersion=15&charset=utf8"
+
+    steps:
+      - uses: actions/checkout@v3
+      - uses: shivammathur/setup-php@2.28.0
+        with:
+          php-version: 8.2
+
+      - name: Install dependencies
+        run: composer install
+
+      - name: Generate certificate
+        run: |
+          mkdir config/jwt
+          openssl genrsa -out config/jwt/private.pem 2048
+          openssl rsa -in config/jwt/private.pem -pubout -out config/jwt/public.pem
+
+      - name: PHP Code Standards
+        run: vendor/bin/phpcs
+
+      - name: PHP Code Analysis 
+        run: vendor/bin/phpstan
+
+      - name: Yaml Lint
+        run: |
+          bin/console lint:yaml config
+          bin/console lint:yaml translations
+
+      - name: Doctrine Migrations
+        run: bin/console doctrine:migrations:migrate --no-interaction
+        env:
+          DATABASE_URL: ${{ matrix.dsn }}
+
+      - name: Doctrine Fixtures
+        run: bin/console doctrine:fixture:load --no-interaction --purge-exclusions view_atendimentos --purge-exclusions view_atendimentos_codificados
+        env:
+          DATABASE_URL: ${{ matrix.dsn }}
+
+      - name: PHP Unit Tests
+        run: vendor/bin/phpunit
+        env:
+          DATABASE_URL: ${{ matrix.dsn }}

@@ -1,0 +1,22 @@
+name: Release
+
+on:
+  push:
+    branches:
+      - v2.2
+
+permissions:
+  contents: write
+  pull-requests: write
+  issues: write
+
+jobs:
+  release-please:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: googleapis/release-please-action@v3
+        with:
+          release-type: simple
+          token: ${{ secrets.RELEASE_PLEASE_TOKEN }}
+          extra-files: |
+            config/services.yaml

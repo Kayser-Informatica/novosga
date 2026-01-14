@@ -1,0 +1,72 @@
+<?php
+
+declare(strict_types=1);
+
+/*
+ * This file is part of the NovoSGA project.
+ *
+ * (c) Rogerio Lino <rogeriolino@gmail.com>
+ *
+ * For the full copyright and license information, please view the LICENSE
+ * file that was distributed with this source code.
+ */
+
+namespace App\Controller\Api;
+
+use App\Entity\Unidade;
+use App\Entity\Atendimento;
+use App\Service\ServicoService;
+use Symfony\Component\HttpFoundation\Response;
+use Symfony\Component\Routing\Annotation\Route;
+
+/**
+ * UnidadesController
+ *
+ * @extends ApiCrudController<Unidade>
+ *
+ * @author Rogério Lino <rogeriolino@gmail.com>
+ */
+#[Route('/api/unidades')]
+class UnidadesController extends ApiCrudController
+{
+    use Actions\GetTrait;
+    use Actions\FindTrait;
+    use Actions\PostTrait;
+    use Actions\PutTrait;
+    use Actions\DeleteTrait;
+
+    public function getEntityName(): string
+    {
+        return Unidade::class;
+    }
+
+    #[Route('/{id}/servicos', methods: ['GET'])]
+    public function servicos(Unidade $unidade, ServicoService $service): Response
+    {
+        $servicos = $service->servicosUnidade($unidade, ['ativo' => true]);
+
+        return $this->json($servicos);
+    }
+
+    #[Route('/{id}/atendimentos', methods: ['GET'])]
+    public function atendimentos(Unidade $unidade): Response
+    {
+        $atendimentos = $this
+            ->getManager()
+            ->createQueryBuilder()
+            ->select([
+                'e', 's', 'ut', 'u'
+            ])
+            ->from(Atendimento::class, 'e')
+            ->join('e.servico', 's')
+            ->join('e.usuarioTriagem', 'ut')
+            ->leftJoin('e.usuario', 'u')
+            ->where('e.unidade = :unidade')
+            ->orderBy('e.id', 'ASC')
+            ->setParameter('unidade', $unidade)
+            ->getQuery()
+            ->getResult();
+
+        return $this->json($atendimentos);
+    }
+}
