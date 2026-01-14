@@ -40,6 +40,8 @@ services:
       MERCURE_PUBLIC_URL: http://127.0.0.1:3000/.well-known/mercure
       # the default secret key, must be the same as MERCURE_PUBLISHER_JWT_KEY
       MERCURE_JWT_SECRET: ${MERCURE_JWT_SECRET}
+      # Messenger transport DSN (uses Doctrine to store messages in database)
+      MESSENGER_TRANSPORT_DSN: doctrine://default
   mercure:
     image: novosga/mercure:v0.11
     restart: always
