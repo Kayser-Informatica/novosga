@@ -4,9 +4,6 @@ services:
       context: ./novosga
       dockerfile: Dockerfile
     restart: always
-    depends_on:
-      mysqldb:
-        condition: service_healthy
     ports:
       - "${APP_PORT}:8080"
     environment:
