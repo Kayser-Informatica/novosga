@@ -33,7 +33,7 @@ RUN curl -o composer.phar https://getcomposer.org/download/2.7.2/composer.phar
 RUN set -xe \
     && touch .env \
     && echo "APP_BUILD_NUMBER=$GIT_COMMIT" >> .env.local
-RUN php composer.phar install --no-dev --optimize-autoloader
+RUN php composer.phar install --no-dev --optimize-autoloader --no-scripts
 RUN php composer.phar dump-autoload --no-dev --classmap-authoritative
 RUN php composer.phar dump-env prod
 
@@ -73,11 +73,11 @@ ENV SUPERCRONIC_URL=https://github.com/aptible/supercronic/releases/download/v0.
     SUPERCRONIC_SHA1SUM=71b0d58cc53f6bd72cf2f293e09e294b79c666d8 \
     SUPERCRONIC=supercronic-linux-amd64
 
-RUN curl -fsSLO "$SUPERCRONIC_URL" \
-    && echo "${SUPERCRONIC_SHA1SUM}  ${SUPERCRONIC}" | sha1sum -c - \
-    && chmod +x "$SUPERCRONIC" \
-    && mv "$SUPERCRONIC" "/usr/local/bin/${SUPERCRONIC}" \
-    && ln -s "/usr/local/bin/${SUPERCRONIC}" /usr/local/bin/supercronic
+RUN curl -fsSLO "$SUPERCRONIC_URL"
+RUN echo "${SUPERCRONIC_SHA1SUM}  ${SUPERCRONIC}" | sha1sum -c -
+RUN chmod +x "$SUPERCRONIC"
+RUN mv "$SUPERCRONIC" "/usr/local/bin/${SUPERCRONIC}"
+RUN ln -s "/usr/local/bin/${SUPERCRONIC}" /usr/local/bin/supercronic
 
 # Copy application files
 COPY --from=composer --chown=65534:65534 /var/www/html/vendor /var/www/html/vendor
