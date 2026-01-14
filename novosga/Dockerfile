@@ -82,7 +82,7 @@ RUN ln -s "/usr/local/bin/${SUPERCRONIC}" /usr/local/bin/supercronic
 # Copy application files
 COPY --from=composer --chown=65534:65534 /var/www/html/vendor /var/www/html/vendor
 COPY --from=composer --chown=65534:65534 /var/www/html/.env.local.php /var/www/html/.env.local.php
-RUN --from=composer touch /var/www/html/public
+RUN --from=composer ls -la /var/www/html/public
 COPY --from=composer --chown=65534:65534 /var/www/html/public/bundles /var/www/html/public/bundles
 COPY --from=cert --chown=65534:65534 /jwt /var/www/html/config/jwt
 
