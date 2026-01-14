@@ -1,0 +1,81 @@
+services:
+  novosga:
+    build:
+      context: .
+      dockerfile: Dockerfile
+    restart: always
+    depends_on:
+      mysqldb:
+        condition: service_healthy
+      mercure:
+        condition: service_started
+    ports:
+      - "0.0.0.0:${APP_PORT:-8080}:8080"
+    environment:
+      APP_ENV: ${APP_ENV:-prod}
+      # database connection
+      # IMPORTANT: DATABASE_URL must use "mysqldb" as hostname (service name), not "localhost" or "127.0.0.1"
+      # Format: mysql://user:password@mysqldb:3306/database_name?serverVersion=8.0&charset=utf8mb4
+      # Example: mysql://novosga:novosga@mysqldb:3306/novosga?serverVersion=8.0&charset=utf8mb4
+      DATABASE_URL: ${DATABASE_URL}
+      # default admin user
+      NOVOSGA_ADMIN_USERNAME: ${NOVOSGA_ADMIN_USERNAME:-admin}
+      NOVOSGA_ADMIN_PASSWORD: ${NOVOSGA_ADMIN_PASSWORD:-123456}
+      NOVOSGA_ADMIN_FIRSTNAME: ${NOVOSGA_ADMIN_FIRSTNAME:-Administrador}
+      NOVOSGA_ADMIN_LASTNAME: ${NOVOSGA_ADMIN_LASTNAME:-Global}
+      # default unity
+      NOVOSGA_UNITY_NAME: ${NOVOSGA_UNITY_NAME:-Minha unidade}
+      NOVOSGA_UNITY_CODE: ${NOVOSGA_UNITY_CODE:-U01}
+      # default no-priority
+      NOVOSGA_NOPRIORITY_NAME: ${NOVOSGA_NOPRIORITY_NAME:-Normal}
+      NOVOSGA_NOPRIORITY_DESCRIPTION: ${NOVOSGA_NOPRIORITY_DESCRIPTION:-Atendimento normal}
+      # default priority
+      NOVOSGA_PRIORITY_NAME: ${NOVOSGA_PRIORITY_NAME:-Prioridade}
+      NOVOSGA_PRIORITY_DESCRIPTION: ${NOVOSGA_PRIORITY_DESCRIPTION:-Atendimento prioritário}
+      # default place
+      NOVOSGA_PLACE_NAME: ${NOVOSGA_PLACE_NAME:-Guichê}
+      # Set TimeZone and locale
+      TZ: ${TZ:-America/Sao_Paulo}
+      APP_LANGUAGE: ${APP_LANGUAGE:-pt_BR}
+      # Endereço Mercure para publicar mensagem (onde "mercure" é o nome do host)
+      # esse endereço será chamado internamente via o PHP
+      MERCURE_URL: http://mercure:3000/.well-known/mercure
+      # Endereço Mercure para consumir mensagem
+      # esse endereço será chamado via o navegador web
+      MERCURE_PUBLIC_URL: ${MERCURE_PUBLIC_URL:-http://127.0.0.1:3000/.well-known/mercure}
+      # the default secret key, must be the same as MERCURE_PUBLISHER_JWT_KEY
+      MERCURE_JWT_SECRET: ${MERCURE_JWT_SECRET}
+      # Messenger transport DSN (uses Doctrine to store messages in database)
+      MESSENGER_TRANSPORT_DSN: ${MESSENGER_TRANSPORT_DSN:-doctrine://default}
+  mercure:
+    image: novosga/mercure:v0.11
+    restart: always
+    ports:
+      - "0.0.0.0:${MERCURE_PORT:-3000}:3000"
+    environment:
+      # same value from ports
+      SERVER_NAME: ":3000"
+      # default publish key, must be changed
+      MERCURE_PUBLISHER_JWT_KEY: ${MERCURE_PUBLISHER_JWT_KEY}
+      MERCURE_EXTRA_DIRECTIVES: ${MERCURE_EXTRA_DIRECTIVES:-anonymous 1; cors_origins *}
+  mysqldb:
+    image: mysql:8.0
+    restart: always
+    environment:
+      MYSQL_USER: ${MYSQL_USER}
+      MYSQL_DATABASE: ${MYSQL_DATABASE}
+      MYSQL_ROOT_PASSWORD: ${MYSQL_ROOT_PASSWORD}
+      MYSQL_PASSWORD: ${MYSQL_PASSWORD}
+      # Set TimeZone
+      TZ: ${TZ:-America/Sao_Paulo}
+    healthcheck:
+      test: ["CMD", "mysqladmin", "ping", "-h", "localhost", "-u", "root"]
+      interval: 5s
+      timeout: 3s
+      retries: 30
+      start_period: 30s
+    volumes:
+      - mysql_data:/var/lib/mysql
+
+volumes:
+  mysql_data:
