@@ -87,6 +87,9 @@ COPY --from=composer --chown=65534:65534 /var/www/html/.env.local.php /var/www/h
 # Create bundles directory (will be populated by assets:install at runtime if needed)
 RUN mkdir -p /var/www/html/public/bundles && chown 65534:65534 /var/www/html/public/bundles
 COPY --from=cert --chown=65534:65534 /jwt /var/www/html/config/jwt
+# Copy .env file from build context (must be in novosga directory)
+# Note: .env is already copied by ADD in php stage, but we copy explicitly to ensure it's present
+COPY --chown=65534:65534 .env /var/www/html/.env
 
 # Copy scripts and configurations
 COPY start.sh /usr/local/bin/start.sh
