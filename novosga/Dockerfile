@@ -36,6 +36,8 @@ RUN set -xe \
 RUN php composer.phar install --no-dev --optimize-autoloader --no-scripts
 RUN php composer.phar dump-autoload --no-dev --classmap-authoritative
 RUN php composer.phar dump-env prod
+# Create bundles directory (assets will be installed at runtime)
+RUN mkdir -p public/bundles
 
 
 FROM alpine/openssl AS cert
@@ -82,8 +84,8 @@ RUN ln -s "/usr/local/bin/${SUPERCRONIC}" /usr/local/bin/supercronic
 # Copy application files
 COPY --from=composer --chown=65534:65534 /var/www/html/vendor /var/www/html/vendor
 COPY --from=composer --chown=65534:65534 /var/www/html/.env.local.php /var/www/html/.env.local.php
-RUN --from=composer ls -la /var/www/html/public
-COPY --from=composer --chown=65534:65534 /var/www/html/public/bundles /var/www/html/public/bundles
+# Create bundles directory (will be populated by assets:install at runtime if needed)
+RUN mkdir -p /var/www/html/public/bundles && chown 65534:65534 /var/www/html/public/bundles
 COPY --from=cert --chown=65534:65534 /jwt /var/www/html/config/jwt
 
 # Copy scripts and configurations
