@@ -1,0 +1,11 @@
+services:
+  panel-app:
+    build:
+      context: .
+      dockerfile: Dockerfile
+    restart: always
+    ports:
+      - "${PANEL_APP_PORT:-8081}:80"
+    environment:
+      # Add any environment variables needed for panel-app here
+      TZ: ${TZ:-America/Sao_Paulo}
