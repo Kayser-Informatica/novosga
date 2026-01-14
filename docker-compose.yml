@@ -8,6 +8,8 @@ services:
       - "${APP_PORT}:8080"
     environment:
       APP_ENV: ${APP_ENV}
+      APP_DEBUG: ${APP_DEBUG}
+      APP_SECRET: ${APP_SECRET}
       # database connection
       # IMPORTANT: DATABASE_URL must use "mysqldb" as hostname (service name), not "localhost" or "127.0.0.1"
       # Format: mysql://user:password@mysqldb:3306/database_name?serverVersion=8.0&charset=utf8mb4
@@ -42,6 +44,14 @@ services:
       MERCURE_JWT_SECRET: ${MERCURE_JWT_SECRET}
       # Messenger transport DSN (uses Doctrine to store messages in database)
       MESSENGER_TRANSPORT_DSN: doctrine://default
+      # OAuth2 private key
+      OAUTH_PRIVATE_KEY: ${OAUTH_PRIVATE_KEY}
+      # OAuth2 public key
+      OAUTH_PUBLIC_KEY: ${OAUTH_PUBLIC_KEY}
+      # OAuth2 passphrase
+      OAUTH_PASSPHRASE: ${OAUTH_PASSPHRASE}
+      # OAuth2 encryption key
+      OAUTH_ENCRYPTION_KEY: ${OAUTH_ENCRYPTION_KEY}
   mercure:
     image: novosga/mercure:v0.11
     restart: always

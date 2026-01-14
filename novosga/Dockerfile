@@ -51,6 +51,16 @@ FROM php
 
 # Set the default parameters
 ENV APP_ENV=prod \
+    APP_DEBUG=0 \
+    APP_SECRET \
+    DATABASE_URL \
+    MERCURE_URL \
+    MERCURE_PUBLIC_URL \
+    MERCURE_JWT_SECRET \
+    OAUTH_PRIVATE_KEY \
+    OAUTH_PUBLIC_KEY \
+    OAUTH_PASSPHRASE \
+    OAUTH_ENCRYPTION_KEY \
     LANGUAGE=pt_BR \
     NOVOSGA_ADMIN_USERNAME="admin" \
     NOVOSGA_ADMIN_PASSWORD="123456" \
@@ -87,6 +97,8 @@ COPY --from=composer --chown=65534:65534 /var/www/html/.env.local.php /var/www/h
 # Create bundles directory (will be populated by assets:install at runtime if needed)
 RUN mkdir -p /var/www/html/public/bundles && chown 65534:65534 /var/www/html/public/bundles
 COPY --from=cert --chown=65534:65534 /jwt /var/www/html/config/jwt
+# Ensure .env file exists (will be populated from ENV vars at runtime in start.sh)
+RUN touch /var/www/html/.env && chown 65534:65534 /var/www/html/.env
 
 # Copy scripts and configurations
 COPY start.sh /usr/local/bin/start.sh
