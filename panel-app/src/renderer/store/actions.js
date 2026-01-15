@@ -44,7 +44,12 @@ export const fetchMessages = ({ state, commit }) => {
         if (messages.length) {
           const last = normalizeMessage(messages[0])
           commit('newMessage', last)
-          window.location.reload()
+          // Reload da página quando chegam novos dados da API (gambiarra para Coolify)
+          setTimeout(() => {
+            if (typeof window !== 'undefined' && window.location) {
+              window.location.reload()
+            }
+          }, 500)
         }
         resolve()
       }, reject)
