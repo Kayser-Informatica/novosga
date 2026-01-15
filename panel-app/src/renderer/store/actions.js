@@ -44,6 +44,7 @@ export const fetchMessages = ({ state, commit }) => {
         if (messages.length) {
           const last = normalizeMessage(messages[0])
           commit('newMessage', last)
+          window.location.reload()
         }
         resolve()
       }, reject)
